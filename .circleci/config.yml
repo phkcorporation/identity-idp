@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Install GnuPG v1
           command: |
-            sudo apt-get install gnupg
+            sudo apt-get install gnupg=1.4.20-1ubuntu3
             gpg --version
       - run:
           name: Install Code Climate Test Reporter
