@@ -83,6 +83,7 @@ describe Encryption::Encryptors::AttributeEncryptor do
     end
 
     it 'returns true if an old key was last used to decrypt something' do
+      allow(Figaro.env).to receive(:attribute_encryption_without_kms).and_return('true')
       ciphertext = subject.encrypt(plaintext)
       rotate_attribute_encryption_key
       subject.decrypt(ciphertext)

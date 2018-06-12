@@ -9,6 +9,10 @@ module Encryption
       end
 
       def encrypt(plaintext)
+        unless Figaro.env.attribute_encryption_without_kms == 'true'
+          return DeprecatedAttributeEncryptor.new.encrypt(plaintext)
+        end
+
         aes_encrypted_ciphertext = aes_cipher.encrypt(plaintext, current_key)
         encode(aes_encrypted_ciphertext)
       end
