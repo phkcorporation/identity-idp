@@ -48,6 +48,7 @@ describe EncryptedAttribute do
 
   describe '#stale?' do
     it 'returns true when email was encrypted with old key' do
+      allow(Figaro.env).to receive(:attribute_encryption_without_kms).and_return('true')
       encrypted_with_old_key = encrypted_email
       rotate_attribute_encryption_key
 
