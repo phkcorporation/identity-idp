@@ -7,7 +7,7 @@ describe CloudhsmKeyGenerator do
 
   describe '#generate_saml_key' do
     it 'generates saml secret key, crt, and transcript' do
-      label = subject.generate_saml_key
+      label, handle = subject.generate_saml_key
       saml_key = "#{label}.key"
       saml_crt = "#{label}.crt"
       transcript = "#{label}.txt"

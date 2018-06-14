@@ -115,6 +115,7 @@ TooManyMethods:
     - Idv::SessionsController
     - ServiceProviderSessionDecorator
     - SessionDecorator
+    - CloudhsmKeyGenerator
 UncommunicativeMethodName:
   exclude:
     - PhoneConfirmationFlow
