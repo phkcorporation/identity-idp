@@ -1,0 +1,7 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const button = document.querySelector('.activate-spinner');
+  const info = document.querySelector('.spinner-area');
+  button.addEventListener('click', () => {
+    info.innerHTML = '<div style="text-align:center"><img src="<%= image_path('spinner.gif') %>" srcset="<%= image_path('spinner@2x.gif') %> 2x" height="144" width="144" alt="" /></div>';
+  });
+});

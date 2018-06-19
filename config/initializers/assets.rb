@@ -12,6 +12,7 @@ Rails.application.config.assets.precompile += %w[
   i18n-strings.js email.css ie8.css ie9.css es5-shim.min.js html5shiv.js respond.min.js
   intl-tel-number/intlTelInput.css intl-tel-number/flags.png
   intl-tel-number/flags@2x.png
+  spinner.js
 ]
 
 Rails.application.config.assets.precompile += %w[spec_helper.js] if Rails.env.test?
