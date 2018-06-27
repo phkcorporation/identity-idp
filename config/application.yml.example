@@ -178,6 +178,8 @@ development:
   twilio_numbers: '["9999999999","2222222222"]'
   twilio_sid: 'sid1'
   twilio_auth_token: 'token1'
+  twilio_http_basic_auth_username: '' # Twilio console configure Request URL
+  twilio_http_basic_auth_password: '' # https://www.twilio.com/docs/usage/security
   twilio_messaging_service_sid: '123abc'
   twilio_record_voice: 'true'
   use_dashboard_service_providers: 'true'
@@ -294,6 +296,8 @@ production:
   twilio_numbers: # Add JSON encoded array of phone numbers
   twilio_sid: # Twilio SID
   twilio_auth_token: # Twilio auth token
+  twilio_http_basic_auth_username: '' # Twilio console configure Request URL
+  twilio_http_basic_auth_password: '' # https://www.twilio.com/docs/usage/security
   twilio_messaging_service_sid: # Twilio CoPilot SID
   twilio_record_voice: 'false'
   use_kms: 'true'
@@ -409,6 +413,8 @@ test:
   twilio_numbers: '["9999999999","2222222222"]'
   twilio_sid: 'sid1'
   twilio_auth_token: 'token1'
+  twilio_http_basic_auth_username: '' # Twilio console configure Request URL
+  twilio_http_basic_auth_password: '' # https://www.twilio.com/docs/usage/security
   twilio_messaging_service_sid: '123abc'
   twilio_record_voice: 'true'
   use_kms: 'false'

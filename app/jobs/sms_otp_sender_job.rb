@@ -2,7 +2,7 @@ class SmsOtpSenderJob < ApplicationJob
   queue_as :sms
 
   def perform(code:, phone:, otp_created_at:)
-    send_otp(TwilioService.new, code, phone) if otp_valid?(otp_created_at)
+    send_otp(TwilioService::Utils.new, code, phone) if otp_valid?(otp_created_at)
   end
 
   private
