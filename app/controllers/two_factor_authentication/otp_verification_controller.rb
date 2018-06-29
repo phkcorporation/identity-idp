@@ -28,7 +28,7 @@ module TwoFactorAuthentication
     def confirm_two_factor_enabled
       return if confirmation_context? || phone_enabled?
 
-      if current_user.two_factor_enabled? && !phone_enabled? && user_signed_in?
+      if two_factor_enabled? && !phone_enabled? && user_signed_in?
         return redirect_to user_two_factor_authentication_url
       end
 
@@ -36,7 +36,11 @@ module TwoFactorAuthentication
     end
 
     def phone_enabled?
-      current_user.phone_enabled?
+      configuration_manager.enabled?
+    end
+
+    def two_factor_enabled?
+      method_manager.two_factor_enabled?
     end
 
     def confirm_voice_capability

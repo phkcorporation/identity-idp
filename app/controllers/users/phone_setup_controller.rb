@@ -30,7 +30,7 @@ module Users
     private
 
     def two_factor_enabled?
-      current_user.two_factor_enabled?
+      method_manager.two_factor_enabled?
     end
 
     def user_phone_form_params
@@ -38,6 +38,10 @@ module Users
         :international_code,
         :phone
       )
+    end
+
+    def method_manager
+      @method_manager ||= TwoFactorAuthentication::MethodManager.new(current_user)
     end
   end
 end

@@ -38,16 +38,16 @@ module Users
     private
 
     def two_factor_enabled?
-      current_user.two_factor_enabled?
+      method_manager.two_factor_enabled?
     end
 
     def track_event
-      properties = { user_signed_up: current_user.two_factor_enabled? }
+      properties = { user_signed_up: two_factor_enabled? }
       analytics.track_event(Analytics::TOTP_SETUP_VISIT, properties)
     end
 
     def store_totp_secret_in_session
-      user_session[:new_totp_secret] = current_user.generate_totp_secret if new_totp_secret.nil?
+      user_session[:new_totp_secret] = configuration_manager.generate_secret if new_totp_secret.nil?
     end
 
     def process_valid_code
@@ -77,6 +77,14 @@ module Users
 
     def new_totp_secret
       user_session[:new_totp_secret]
+    end
+
+    def method_manager
+      @method_manager ||= TwoFactorAuthentication::MethodManager.new(current_user)
+    end
+
+    def configuration_manager
+      @configuration_manager ||= method_manager.configuration_manager(:totp)
     end
   end
 end

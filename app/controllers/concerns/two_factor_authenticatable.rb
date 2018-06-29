@@ -242,7 +242,7 @@ module TwoFactorAuthenticatable
       voice_otp_delivery_unsupported: voice_otp_delivery_unsupported?,
       reenter_phone_number_path: reenter_phone_number_path,
       unconfirmed_phone: unconfirmed_phone?,
-      totp_enabled: current_user.totp_enabled?,
+      totp_enabled: method_manager.two_factor_enabled?([:totp]),
       remember_device_available: !idv_context?,
     }.merge(generic_data)
   end
@@ -253,14 +253,14 @@ module TwoFactorAuthenticatable
       two_factor_authentication_method: two_factor_authentication_method,
       user_email: current_user.email,
       remember_device_available: false,
-      phone_enabled: current_user.phone_enabled?,
+      phone_enabled: method_manager.two_factor_enabled?(%i[sms voice]),
     }.merge(generic_data)
   end
 
   def generic_data
     {
       personal_key_unavailable: personal_key_unavailable?,
-      has_piv_cac_configured: current_user.piv_cac_enabled?,
+      has_piv_cac_configured: method_manager.two_factor_enabled?([:piv_cac]),
       reauthn: reauthn?,
     }
   end
@@ -312,5 +312,21 @@ module TwoFactorAuthenticatable
       data: data,
       view: view_context
     )
+  end
+
+  def method
+    if two_factor_authentication_method.to_s == 'authenticator'
+      :totp
+    else
+      two_factor_authentication_method
+    end
+  end
+
+  def method_manager
+    @method_manager ||= TwoFactorAuthentication::MethodManager.new(current_user)
+  end
+
+  def configuration_manager
+    @configuration_manager ||= method_manager.configuration_manager(method)
   end
 end

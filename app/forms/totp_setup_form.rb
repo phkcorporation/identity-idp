@@ -3,6 +3,7 @@ class TotpSetupForm
     @user = user
     @secret = secret
     @code = code
+    @configuration_manager = TwoFactorAuthentication::TotpConfigurationManager.new(user)
   end
 
   def submit
@@ -15,14 +16,13 @@ class TotpSetupForm
 
   private
 
-  attr_reader :user, :code, :secret, :success
+  attr_reader :user, :code, :secret, :success, :configuration_manager
 
   def valid_totp_code?
-    user.confirm_totp_secret(secret, code)
+    configuration_manager.confirm_configuration(secret, code)
   end
 
   def process_valid_submission
-    user.save!
-    Event.create(user_id: user.id, event_type: :authenticator_enabled)
+    configuration_manager.save_configuration
   end
 end

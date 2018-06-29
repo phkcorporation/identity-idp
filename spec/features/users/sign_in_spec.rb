@@ -338,8 +338,11 @@ feature 'Sign in' do
       allow(SmsOtpSenderJob).to receive(:perform_later)
       allow(VoiceOtpSenderJob).to receive(:perform_later)
       user = create(:user, :signed_up, phone: '+91 1234567890', otp_delivery_preference: 'sms')
+      puts "=============================================================================="
       signin(user.email, user.password)
+      puts "Visiting #{login_two_factor_path(otp_delivery_preference: 'voice', reauthn: false)}"
       visit login_two_factor_path(otp_delivery_preference: 'voice', reauthn: false)
+      puts "=============================================================================="
 
       expect(VoiceOtpSenderJob).to_not have_received(:perform_later)
       expect(SmsOtpSenderJob).to have_received(:perform_later).exactly(:once)

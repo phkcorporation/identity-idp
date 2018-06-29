@@ -39,9 +39,15 @@ module TwoFactorAuthentication
     end
 
     def next_step
-      return account_recovery_setup_url unless current_user.phone_enabled?
+      return account_recovery_setup_url unless alternate_2fa_enabled?
 
       after_otp_verification_confirmation_url
+    end
+
+    def alternate_2fa_enabled?
+      %i[sms voice].any? do |method|
+        method_manager.configuration_manager(method).enabled?
+      end
     end
 
     def handle_invalid_piv_cac
