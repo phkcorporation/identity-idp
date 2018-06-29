@@ -61,7 +61,7 @@ class User < ApplicationRecord
   end
 
   def piv_cac_available?
-    true || piv_cac_enabled? || identities.any?(&:piv_cac_available?)
+    piv_cac_enabled? || identities.any?(&:piv_cac_available?)
   end
 
   def need_two_factor_authentication?(_request)

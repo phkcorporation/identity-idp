@@ -2,7 +2,7 @@ module TwoFactorAuthentication
   class MethodManager
     attr_reader :user
 
-    METHODS = %i[sms voice totp piv_cac personal_key]
+    METHODS = %i[sms voice totp piv_cac personal_key].freeze
 
     def initialize(user)
       @user = user

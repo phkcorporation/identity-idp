@@ -20,9 +20,7 @@ module TwoFactorAuthentication
     #   1. setup configuration
     #   2. check that the configuration is unique
     #   3. save configuration
-    def x509_dn_uuid=(uuid)
-      user.x509_dn_uuid = uuid
-    end
+    delegate :x509_dn_uuid=, to: :user
 
     def save_configuration
       user.save!
@@ -34,9 +32,7 @@ module TwoFactorAuthentication
       Event.create(user_id: user.id, event_type: :piv_cac_disabled)
     end
 
-    def x509_dn_uuid
-      user.x509_dn_uuid
-    end
+    delegate :x509_dn_uuid, to: :user
 
     def authenticate(uuid)
       user.confirm_piv_cac?(uuid)
@@ -44,7 +40,7 @@ module TwoFactorAuthentication
 
     # OR: This can go in the PivCacSetupForm
     # the real question is if someone else has this configuration already
-    def x509_dn_uuid_associated?(uuid)
+    def x509_dn_uuid_associated?(_uuid)
       if User.find_by(x509_dn_uuid: x509_dn_uuid)
         true
       else

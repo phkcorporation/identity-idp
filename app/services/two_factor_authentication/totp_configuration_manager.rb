@@ -28,12 +28,11 @@ module TwoFactorAuthentication
       Event.create(user_id: user.id, event_type: :authenticator_enabled)
     end
 
-    def remove_configuration
-    end
+    def remove_configuration; end
 
     def authenticate(code)
       code.match?(pattern_matching_code_format) &&
-        user.authenticate_totp(code) 
+        user.authenticate_totp(code)
     end
 
     private
