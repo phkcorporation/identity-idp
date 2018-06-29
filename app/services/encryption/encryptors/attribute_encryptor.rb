@@ -1,10 +1,10 @@
 module Encryption
   module Encryptors
     class AttributeEncryptor
-      include Pii::Encodable
+      include Encodable
 
       def initialize
-        @aes_cipher = Pii::Cipher.new
+        @aes_cipher = AesCipher.new
         @stale = false
       end
 
@@ -19,7 +19,7 @@ module Encryption
 
       def decrypt(ciphertext)
         return DeprecatedAttributeEncryptor.new.decrypt(ciphertext) if legacy?(ciphertext)
-        raise Pii::EncryptionError, 'ciphertext invalid' unless valid_base64_encoding?(ciphertext)
+        raise EncryptionError, 'ciphertext invalid' unless valid_base64_encoding?(ciphertext)
         decoded_ciphertext = decode(ciphertext)
         try_decrypt(decoded_ciphertext)
       end
@@ -35,14 +35,16 @@ module Encryption
 
       def try_decrypt(decoded_ciphertext)
         all_keys.each do |key|
-          begin
-            self.stale = key != current_key
-            return aes_cipher.decrypt(decoded_ciphertext, key)
-          rescue Pii::EncryptionError
-            nil
-          end
+          try_decrypt_with_key(decoded_ciphertext, key)
         end
-        raise Pii::EncryptionError, 'unable to decrypt attribute with any key'
+        raise EncryptionError, 'unable to decrypt attribute with any key'
+      end
+
+      def try_decrypt_with_key(decoded_ciphertext, key)
+        self.stale = key != current_key
+        aes_cipher.decrypt(decoded_ciphertext, key)
+      rescue EncryptionError
+        nil
       end
 
       def legacy?(ciphertext)
