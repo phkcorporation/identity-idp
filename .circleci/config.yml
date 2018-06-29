@@ -8,7 +8,7 @@ jobs:
     parallelism: 4
     docker:
       # Specify the Ruby version you desire here
-      - image: circleci/ruby:2.3-node-browsers
+      - image: circleci/ruby:2.5.1-node-browsers
         environment:
           RAILS_ENV: test
           CC_TEST_REPORTER_ID: faecd27e9aed532634b3f4d3e251542d7de9457cfca96a94208a63270ef9b42e
@@ -30,14 +30,13 @@ jobs:
 
       - restore-cache:
           keys:
-            - identity-idp-bundle-{{ checksum "Gemfile.lock" }}
-            - identity-idp-bundle-
+            - v2-identity-idp-bundle-{{ checksum "Gemfile.lock" }}
       - run:
           name: Install dependencies
           command: |
             bundle check || bundle install --deployment --jobs=4 --retry=3 --without deploy development doc production --path vendor/bundle
       - save-cache:
-          key: identity-idp-bundle-{{ checksum "Gemfile.lock" }}
+          key: v2-identity-idp-bundle-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 

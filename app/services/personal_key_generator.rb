@@ -9,23 +9,18 @@ class PersonalKeyGenerator
   end
 
   def create
-    user.recovery_salt = Devise.friendly_token[0, 20]
-    user.recovery_cost = Figaro.env.scrypt_cost
-    @user_access_key = make_user_access_key(raw_personal_key)
-    user.personal_key = hashed_code
+    digest = create_encrypted_recovery_code_digest
+    # Until we drop the old columns, still write to them so that we can rollback
+    create_legacy_recovery_code(digest)
     user.save!
     raw_personal_key.tr(' ', '-')
   end
 
   def verify(plaintext_code)
-    @user_access_key = make_user_access_key(normalize(plaintext_code))
-    encryption_key, encrypted_code = user.personal_key.split(Pii::Encryptor::DELIMITER)
-    begin
-      user_access_key.unlock(encryption_key)
-    rescue Pii::EncryptionError => _err
-      return false
-    end
-    Devise.secure_compare(encrypted_code, user_access_key.encrypted_password)
+    Encryption::PasswordVerifier.verify(
+      password: normalize(plaintext_code),
+      digest: user.encrypted_recovery_code_digest
+    )
   end
 
   def normalize(plaintext_code)
@@ -42,25 +37,24 @@ class PersonalKeyGenerator
 
   attr_reader :user
 
+  def create_legacy_recovery_code(digest)
+    user.personal_key = [
+      digest.encryption_key,
+      digest.encrypted_password,
+    ].join(Encryption::Encryptors::AesEncryptor::DELIMITER)
+    user.recovery_salt = digest.password_salt
+    user.recovery_cost = digest.password_cost
+  end
+
+  def create_encrypted_recovery_code_digest
+    digest = Encryption::PasswordVerifier.digest(raw_personal_key)
+    user.encrypted_recovery_code_digest = digest.to_s
+    digest
+  end
+
   def encode_code(code:, length:, split:)
     decoded = Base32::Crockford.decode(code)
     Base32::Crockford.encode(decoded, length: length, split: split).tr('-', ' ')
-  end
-
-  def make_user_access_key(code)
-    Encryption::UserAccessKey.new(
-      password: code,
-      salt: user.recovery_salt,
-      cost: user.recovery_cost
-    )
-  end
-
-  def hashed_code
-    user_access_key.build
-    [
-      user_access_key.encryption_key,
-      user_access_key.encrypted_password,
-    ].join(Pii::Encryptor::DELIMITER)
   end
 
   def raw_personal_key

@@ -31,21 +31,24 @@ module IdvStepHelper
     complete_idv_steps_before_profile_step(user)
     fill_out_idv_form_ok
     click_idv_continue
+    click_idv_continue
   end
 
   def complete_idv_steps_before_phone_step(user = user_with_2fa)
-    complete_idv_steps_before_address_step(user)
-    click_idv_address_choose_phone
+    complete_idv_steps_before_profile_step(user)
+    fill_out_idv_form_ok
+    click_idv_continue
+    click_idv_continue
   end
 
   def complete_idv_steps_before_usps_step(user = user_with_2fa)
-    complete_idv_steps_before_address_step(user)
-    click_idv_address_choose_usps
+    complete_idv_steps_before_phone_step(user)
+    click_on t('idv.form.activate_by_mail')
   end
 
   def complete_idv_steps_before_phone_otp_delivery_selection_step(user = user_with_2fa)
     complete_idv_steps_before_phone_step(user)
-    fill_out_phone_form_ok('2341230638')
+    fill_out_phone_form_ok('2342255432')
     click_idv_continue
   end
 
@@ -68,7 +71,9 @@ module IdvStepHelper
   end
 
   alias complete_idv_steps_before_review_step complete_idv_steps_with_phone_before_review_step
+  # rubocop:disable Metrics/LineLength
   alias complete_idv_steps_before_confirmation_step complete_idv_steps_with_phone_before_confirmation_step
+  # rubocop:enable Metrics/LineLength
 
   def complete_idv_steps_with_usps_before_review_step(user = user_with_2fa)
     complete_idv_steps_before_usps_step(user)

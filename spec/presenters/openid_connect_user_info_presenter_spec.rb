@@ -4,7 +4,7 @@ RSpec.describe OpenidConnectUserInfoPresenter do
   include Rails.application.routes.url_helpers
 
   let(:rails_session_id) { SecureRandom.uuid }
-  let(:scope) { 'openid email address phone profile social_security_number' }
+  let(:scope) { 'openid email address phone profile social_security_number x509:subject' }
   let(:identity) do
     build(:identity,
           rails_session_id: rails_session_id,
@@ -26,6 +26,53 @@ RSpec.describe OpenidConnectUserInfoPresenter do
       end
     end
 
+    context 'when a piv/cac was used as second factor' do
+      let(:x509) do
+        {
+          subject: x509_subject,
+        }
+      end
+
+      let(:x509_subject) { 'x509-subject' }
+
+      before do
+        X509::SessionStore.new(rails_session_id).put(x509, 5.minutes.to_i)
+      end
+
+      context 'when the identity has piv/cac associated' do
+        let(:identity) do
+          build(:identity,
+                rails_session_id: rails_session_id,
+                user: build(:user, :with_piv_or_cac),
+                scope: scope)
+        end
+
+        context 'when the scope includes all attributes' do
+          it 'returns x509 attributes' do
+            aggregate_failures do
+              expect(user_info[:x509_subject]).to eq(x509_subject)
+            end
+          end
+
+          it 'renders values as simple strings as json' do
+            json = user_info.as_json
+
+            expect(json['x509_subject']).to eq(x509_subject)
+          end
+        end
+      end
+
+      context 'when the identity has no piv/cac associated' do
+        context 'when the scope includes all attributes' do
+          it 'returns no x509 attributes' do
+            aggregate_failures do
+              expect(user_info[:x509_subject]).to be_blank
+            end
+          end
+        end
+      end
+    end
+
     context 'when there is decrypted loa3 session data in redis' do
       let(:pii) do
         {
@@ -37,7 +84,7 @@ RSpec.describe OpenidConnectUserInfoPresenter do
           city: 'Washington',
           state: 'DC',
           zipcode: '12345',
-          phone: '+1 (555) 555-5555',
+          phone: '+1 (703) 555-5555',
           ssn: '666661234',
         }
       end
@@ -55,7 +102,7 @@ RSpec.describe OpenidConnectUserInfoPresenter do
               expect(user_info[:given_name]).to eq('John')
               expect(user_info[:family_name]).to eq('Smith')
               expect(user_info[:birthdate]).to eq('1970-01-01')
-              expect(user_info[:phone]).to eq('+1 (555) 555-5555')
+              expect(user_info[:phone]).to eq('+1 (703) 555-5555')
               expect(user_info[:phone_verified]).to eq(true)
               expect(user_info[:address]).to eq(
                 formatted: "123 Fake St Apt 456\nWashington, DC 12345",
@@ -85,7 +132,7 @@ RSpec.describe OpenidConnectUserInfoPresenter do
               expect(user_info[:given_name]).to eq(nil)
               expect(user_info[:family_name]).to eq(nil)
               expect(user_info[:birthdate]).to eq(nil)
-              expect(user_info[:phone]).to eq('+1 (555) 555-5555')
+              expect(user_info[:phone]).to eq('+1 (703) 555-5555')
               expect(user_info[:phone_verified]).to eq(true)
               expect(user_info[:address]).to eq(nil)
               expect(user_info[:social_security_number]).to eq(nil)

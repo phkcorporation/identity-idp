@@ -106,23 +106,13 @@ feature 'SP-initiated authentication with login.gov', :user_flow do
                               click_button t('forms.buttons.continue')
                             end
 
-                            it 'prompts to activate account by phone or mail' do
+                            it 'prompts the user to confirm or enter phone number' do
                               screenshot_and_save_page
-                            end
-
-                            context 'when activating by phone' do
-                              before do
-                                click_idv_address_choose_phone
-                              end
-
-                              it 'prompts the user to confirm or enter phone number' do
-                                screenshot_and_save_page
-                              end
                             end
 
                             context 'when activating by mail' do
                               before do
-                                click_idv_address_choose_usps
+                                click_on t('idv.form.no_alternate_phone_html')
                               end
 
                               it 'prompts the user to confirm' do
@@ -344,9 +334,7 @@ feature 'SP-initiated authentication with login.gov', :user_flow do
 
   def complete_phone_form_with_valid_phone
     phone = Faker::PhoneNumber.cell_phone
-    until PhonyRails.plausible_number? phone, country_code: :us
-      phone = Faker::PhoneNumber.cell_phone
-    end
+    phone = Faker::PhoneNumber.cell_phone until Phonelib.valid_for_country?(phone, 'US')
     fill_in 'user_phone_form_phone', with: phone
   end
 end

@@ -42,7 +42,7 @@ queue_health_check_frequency_seconds: '30'
 
 # Configuration to probabilistically select the config.active_job.queue_adapter
 # Currently known options are: sidekiq, async, inline
-queue_adapter_weights: '{"sidekiq": 1}'
+queue_adapter_weights: '{"inline": 1}'
 
 # The number of words in the personal key phrase
 recovery_code_length: '4'
@@ -86,6 +86,9 @@ development:
   aws_ses_region_pool: '{ "us-west-2": 5, "us-east-1": 95 }'
   basic_auth_user_name: 'user'
   basic_auth_password: 'secret'
+  cloudhsm_enabled: 'false'
+  cloudhsm_pin: 'user:password'
+  cloudhsm_saml_key_label: 'key1'
   dashboard_api_token: 'test_token'
   dashboard_url: 'http://localhost:3001/api/service_providers'
   database_host: ''
@@ -140,11 +143,14 @@ development:
   otp_delivery_blocklist_findtime: '5'
   otp_delivery_blocklist_maxretry: '10'
   otp_valid_for: '10'
-  password_pepper: 'f22d4b2cafac9066fe2f4416f5b7a32c6942d82f7e00740c7594a095fa8de8db17c05314be7b18a5d6dd5683e73eadf6cc95aa633e5ad9a701edb95192a6a105'
+  password_pepper: 'f22d4b2cafac9066fe2f4416f5b7a32c'
   password_strength_enabled: 'true'
+  piv_cac_agencies: '["Test Government Agency"]'
   piv_cac_enabled: 'true'
+  piv_cac_verify_token_secret: 'ee7f20f44cdc2ba0c6830f70470d1d1d059e1279cdb58134db92b35947b1528ef5525ece5910cf4f2321ab989a618feea12ef95711dbc62b9601e8520a34ee12'
   piv_cac_service_url: 'https://localhost:8443/'
   piv_cac_verify_token_url: 'https://localhost:8443/'
+  pkcs11_lib: '/opt/cloudhsm/lib/libcloudhsm_pkcs11.so'
   proofer_mock_fallback: 'true'
   rack_mini_profiler: 'off'
   reauthn_window: '120'
@@ -159,6 +165,7 @@ development:
   requests_per_ip_track_only_mode: 'false'
   saml_passphrase: 'trust-but-verify'
   saml_secret_rotation_certificate:
+  saml_secret_rotation_cloudhsm_saml_key_label: 'key2'
   saml_secret_rotation_enabled: 'false'
   saml_secret_rotation_path_suffix:
   saml_secret_rotation_secret_key:
@@ -179,6 +186,11 @@ development:
   usps_confirmation_max_days: '10'
   enable_i18n_mode: 'false'
   enable_load_testing_mode: 'false'
+  usps_upload_sftp_directory: '/directory'
+  usps_upload_sftp_host: 'example.com'
+  usps_upload_sftp_username: 'user'
+  usps_upload_sftp_password: 'pass'
+  usps_upload_token: '123ABC'
 
 # These values serve as defaults for all production-like environments, which
 # includes *.identitysandbox.gov and *.login.gov.
@@ -204,6 +216,9 @@ production:
   aws_ses_region_pool:
   basic_auth_user_name:
   basic_auth_password:
+  cloudhsm_enabled: 'false'
+  cloudhsm_pin: 'user:password'
+  cloudhsm_saml_key_label: 'key1'
   disable_email_sending: 'false'
   dashboard_api_token:
   database_statement_timeout: '2500'
@@ -255,6 +270,7 @@ production:
   password_strength_enabled: 'true'
   piv_cac_agencies: '["DOD"]'
   piv_cac_enabled: 'false'
+  pkcs11_lib: '/opt/cloudhsm/lib/libcloudhsm_pkcs11.so'
   proofer_mock_fallback: 'true'
   reauthn_window: '120'
   recaptcha_enabled_percent: '0'
@@ -268,6 +284,7 @@ production:
   requests_per_ip_track_only_mode: 'true'
   saml_passphrase:
   saml_secret_rotation_certificate:
+  saml_secret_rotation_cloudhsm_saml_key_label: 'key2'
   saml_secret_rotation_enabled: 'false'
   saml_secret_rotation_path_suffix:
   saml_secret_rotation_secret_key:
@@ -285,6 +302,11 @@ production:
   usps_confirmation_max_days: '30'
   enable_i18n_mode: 'false'
   enable_load_testing_mode: 'false'
+  usps_upload_sftp_directory:
+  usps_upload_sftp_host:
+  usps_upload_sftp_username:
+  usps_upload_sftp_password:
+  usps_upload_token:
 
 test:
   aamva_cert_enabled: 'true'
@@ -303,6 +325,9 @@ test:
   aws_ses_region_pool: '{ "us-west-2": 5, "us-east-1": 95 }'
   basic_auth_user_name: 'user'
   basic_auth_password: 'secret'
+  cloudhsm_enabled: 'false'
+  cloudhsm_pin: 'user:password'
+  cloudhsm_saml_key_label: 'key1'
   domain_name: 'www.example.com'
   database_host: ''
   database_name: ''
@@ -354,11 +379,14 @@ test:
   otp_delivery_blocklist_findtime: '1'
   otp_delivery_blocklist_maxretry: '2'
   otp_valid_for: '10'
-  password_pepper: 'f22d4b2cafac9066fe2f4416f5b7a32c6942d82f7e00740c7594a095fa8de8db17c05314be7b18a5d6dd5683e73eadf6cc95aa633e5ad9a701edb95192a6a105'
+  password_pepper: 'f22d4b2cafac9066fe2f4416f5b7a32c'
   password_strength_enabled: 'false'
+  piv_cac_agencies: '["Test Government Agency"]'
   piv_cac_enabled: 'true'
   piv_cac_service_url: 'https://localhost:8443/'
+  piv_cac_verify_token_secret: '3ac13bfa23e22adae321194c083e783faf89469f6f85dcc0802b27475c94b5c3891b5657bd87d0c1ad65de459166440512f2311018db90d57b15d8ab6660748f'
   piv_cac_verify_token_url: 'https://localhost:8443/'
+  pkcs11_lib: '/opt/cloudhsm/lib/libcloudhsm_pkcs11.so'
   proofer_mock_fallback: 'true'
   reauthn_window: '120'
   recaptcha_enabled_percent: '0'
@@ -372,6 +400,7 @@ test:
   requests_per_ip_track_only_mode: 'false'
   saml_passphrase: 'trust-but-verify'
   saml_secret_rotation_certificate: 'saml2018.crt'
+  saml_secret_rotation_cloudhsm_saml_key_label: 'key2'
   saml_secret_rotation_enabled: 'true'
   saml_secret_rotation_path_suffix: '2018'
   saml_secret_rotation_secret_key: 'saml2018.key.enc'
@@ -389,3 +418,8 @@ test:
   usps_confirmation_max_days: '10'
   enable_i18n_mode: 'false'
   enable_load_testing_mode: 'false'
+  usps_upload_sftp_directory: '/directory'
+  usps_upload_sftp_host: 'example.com'
+  usps_upload_sftp_username: 'user'
+  usps_upload_sftp_password: 'pass'
+  usps_upload_token: 'test_token'

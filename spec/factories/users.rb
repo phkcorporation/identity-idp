@@ -7,12 +7,23 @@ FactoryBot.define do
     password '!1a Z@6s' * 16 # Maximum length password.
 
     trait :with_phone do
-      phone '+1 (202) 555-1212'
+      phone '+1 202-555-1212'
       phone_confirmed_at Time.zone.now
     end
 
     trait :with_piv_or_cac do
       x509_dn_uuid { SecureRandom.uuid }
+    end
+
+    trait :with_personal_key do
+      after :build do |user|
+        user.personal_key = PersonalKeyGenerator.new(user).create
+      end
+    end
+
+    trait :with_authentication_app do
+      with_personal_key
+      otp_secret_key 'abc123'
     end
 
     trait :admin do
@@ -25,9 +36,7 @@ FactoryBot.define do
 
     trait :signed_up do
       with_phone
-      after :build do |user|
-        user.personal_key = PersonalKeyGenerator.new(user).create
-      end
+      with_personal_key
     end
 
     trait :unconfirmed do

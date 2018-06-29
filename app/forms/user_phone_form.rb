@@ -3,6 +3,8 @@ class UserPhoneForm
   include FormPhoneValidator
   include OtpDeliveryPreferenceValidator
 
+  validates :otp_delivery_preference, inclusion: { in: %w[voice sms] }
+
   attr_accessor :phone, :international_code, :otp_delivery_preference
 
   def initialize(user)
@@ -16,15 +18,16 @@ class UserPhoneForm
     ingest_submitted_params(params)
 
     success = valid?
-
     self.phone = submitted_phone unless success
-    update_otp_delivery_preference_for_user if otp_delivery_preference_changed? && success
+
+    update_otp_delivery_preference_for_user if
+      success && otp_delivery_preference.present? && otp_delivery_preference_changed?
 
     FormResponse.new(success: success, errors: errors.messages, extra: extra_analytics_attributes)
   end
 
   def phone_changed?
-    user.phone != phone
+    formatted_user_phone != phone
   end
 
   private
@@ -40,11 +43,14 @@ class UserPhoneForm
   def ingest_submitted_params(params)
     self.international_code = params[:international_code]
     self.submitted_phone = params[:phone]
-    self.phone = PhoneFormatter.new.format(
+    self.phone = PhoneFormatter.format(
       submitted_phone,
       country_code: international_code
     )
-    self.otp_delivery_preference = params[:otp_delivery_preference]
+
+    tfa_prefs = params[:otp_delivery_preference]
+
+    self.otp_delivery_preference = tfa_prefs if tfa_prefs
   end
 
   def otp_delivery_preference_changed?
@@ -54,5 +60,9 @@ class UserPhoneForm
   def update_otp_delivery_preference_for_user
     user_attributes = { otp_delivery_preference: otp_delivery_preference }
     UpdateUser.new(user: user, attributes: user_attributes).call
+  end
+
+  def formatted_user_phone
+    Phonelib.parse(user.phone).international
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180521155700) do
+ActiveRecord::Schema.define(version: 20180619145839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,15 @@ ActiveRecord::Schema.define(version: 20180521155700) do
     t.index ["updated_at"], name: "index_otp_requests_trackers_on_updated_at"
   end
 
+  create_table "password_metrics", force: :cascade do |t|
+    t.integer "metric", null: false
+    t.float "value", null: false
+    t.integer "count", null: false
+    t.index ["metric", "value"], name: "index_password_metrics_on_metric_and_value", unique: true
+    t.index ["metric"], name: "index_password_metrics_on_metric"
+    t.index ["value"], name: "index_password_metrics_on_value"
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.integer "user_id", null: false
     t.boolean "active", default: false, null: false
@@ -97,6 +106,15 @@ ActiveRecord::Schema.define(version: 20180521155700) do
     t.index ["user_id", "active"], name: "index_profiles_on_user_id_and_active", unique: true, where: "(active = true)"
     t.index ["user_id", "ssn_signature", "active"], name: "index_profiles_on_user_id_and_ssn_signature_and_active", unique: true, where: "(active = true)"
     t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "remote_settings", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "url", null: false
+    t.text "contents", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_remote_settings_on_name", unique: true
   end
 
   create_table "service_provider_requests", force: :cascade do |t|
@@ -181,6 +199,7 @@ ActiveRecord::Schema.define(version: 20180521155700) do
     t.integer "totp_timestamp"
     t.string "x509_dn_uuid"
     t.string "encrypted_password_digest", default: ""
+    t.string "encrypted_recovery_code_digest", default: ""
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email_fingerprint"], name: "index_users_on_email_fingerprint", unique: true
     t.index ["encrypted_otp_secret_key"], name: "index_users_on_encrypted_otp_secret_key", unique: true

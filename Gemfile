@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}.git" }
 
-ruby '~> 2.3.7'
+ruby '~> 2.5.1'
 
 gem 'rails', '~> 5.1.3'
 
@@ -17,6 +17,7 @@ gem 'exception_notification'
 gem 'figaro'
 gem 'foundation_emails'
 gem 'gibberish'
+gem 'greenletters'
 gem 'gyoku'
 gem 'hashie'
 gem 'hiredis'
@@ -29,7 +30,7 @@ gem 'net-sftp'
 gem 'newrelic_rpm'
 gem 'pg'
 gem 'phonelib'
-gem 'phony_rails'
+gem 'pkcs11'
 gem 'premailer-rails'
 gem 'proofer', github: '18F/identity-proofer-gem', tag: 'v2.5.0'
 gem 'rack-attack'
@@ -43,11 +44,11 @@ gem 'redis-session-store', github: '18F/redis-session-store', branch: 'master'
 gem 'rqrcode'
 gem 'ruby-progressbar'
 gem 'ruby-saml'
-gem 'saml_idp', git: 'https://github.com/18F/saml_idp.git', tag: 'v0.6.0-18f'
+gem 'saml_idp', git: 'https://github.com/18F/saml_idp.git', tag: 'v0.7.0-18f'
 gem 'sass-rails', '~> 5.0'
 gem 'savon'
 gem 'scrypt'
-gem 'secure_headers', '~> 3.0'
+gem 'secure_headers', '~> 6.0'
 gem 'sidekiq'
 gem 'simple_form'
 gem 'sinatra', require: false
@@ -60,7 +61,6 @@ gem 'typhoeus'
 gem 'uglifier', '~> 3.2'
 gem 'valid_email'
 gem 'webpacker', '~> 3.4'
-gem 'whenever', require: false
 gem 'xml-simple'
 gem 'xmlenc', '~> 0.6'
 gem 'zxcvbn-js'
@@ -112,7 +112,7 @@ group :test do
 end
 
 group :production do
-  gem 'aamva', git: 'git@github.com:18F/identity-aamva-api-client-gem', tag: 'v3.0.0'
+  gem 'aamva', git: 'git@github.com:18F/identity-aamva-api-client-gem', tag: 'v3.0.1'
   gem 'equifax', git: 'git@github.com:18F/identity-equifax-api-client-gem.git', tag: 'v1.1.0'
   gem 'lexisnexis', git: 'git@github.com:18F/identity-lexisnexis-api-client-gem', tag: 'v1.0.0'
 end

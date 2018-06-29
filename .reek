@@ -5,6 +5,7 @@ ControlParameter:
     - CustomDeviseFailureApp#i18n_message
     - OpenidConnectRedirector#initialize
     - NoRetryJobs#call
+    - PhoneFormatter#self.format
 DuplicateMethodCall:
   exclude:
     - ApplicationController#disable_caching
@@ -13,7 +14,6 @@ DuplicateMethodCall:
     - MfaConfirmationController#handle_invalid_password
     - needs_to_confirm_email_change?
     - WorkerHealthChecker#status
-    - FileEncryptor#encrypt
     - UserFlowExporter#self.massage_assets
     - BasicAuthUrl#build
     - fallback_to_english
@@ -45,17 +45,19 @@ FeatureEnvy:
     - Utf8Sanitizer#event_attributes
     - Utf8Sanitizer#remote_ip
     - Idv::Proofer#validate_vendors
+    - PersonalKeyGenerator#create_legacy_recovery_code
 InstanceVariableAssumption:
   exclude:
     - User
+    - JWT
 IrresponsibleModule:
   enabled: false
 ManualDispatch:
   exclude:
     - EncryptedSidekiqRedis#respond_to_missing?
+    - CloudhsmKeyGenerator#initialize_settings
 NestedIterators:
   exclude:
-    - FileEncryptor#encrypt
     - UserFlowExporter#self.massage_html
     - TwilioService#sanitize_phone_number
     - ServiceProviderSeeder#run
@@ -66,7 +68,7 @@ LongParameterList:
     - IdentityLinker#optional_attributes
     - Idv::ProoferJob#perform
     - Idv::VendorResult#initialize
-    - Pii::Attributes#self.new_from_encrypted
+    - JWT
 RepeatedConditional:
   exclude:
     - Users::ResetPasswordsController
@@ -81,6 +83,7 @@ TooManyInstanceVariables:
     - OpenidConnectAuthorizeForm
     - OpenidConnectRedirector
     - Idv::VendorResult
+    - CloudhsmKeyGenerator
 TooManyStatements:
   max_statements: 6
   exclude:
@@ -89,13 +92,13 @@ TooManyStatements:
     - OpenidConnect::AuthorizationController#store_request
     - SamlIdpAuthConcern#store_saml_request
     - Users::PhoneConfirmationController
-    - FileEncryptor#encrypt
     - UserFlowExporter#self.massage_assets
     - UserFlowExporter#self.massage_html
     - UserFlowExporter#self.run
     - Idv::Agent#proof
     - Idv::Proofer#configure_vendors
     - Idv::VendorResult#initialize
+    - SamlIdpController#auth
     - Upaya::QueueConfig#self.choose_queue_adapter
     - Upaya::RandomTools#self.random_weighted_sample
     - UserFlowFormatter#stop
@@ -111,12 +114,19 @@ TooManyMethods:
     - Idv::SessionsController
     - ServiceProviderSessionDecorator
     - SessionDecorator
+    - HolidayService
 UncommunicativeMethodName:
   exclude:
     - PhoneConfirmationFlow
     - render_401
     - SessionDecorator#registration_bullet_1
     - ServiceProviderSessionDecorator#registration_bullet_1
+UncommunicativeModuleName:
+  exclude:
+    - X509
+    - X509::Attribute
+    - X509::Attributes
+    - X509::SessionStore
 UnusedPrivateMethod:
   exclude:
     - ApplicationController
@@ -140,6 +150,7 @@ UtilityFunction:
     - UserEncryptedAttributeOverrides#create_fingerprint
     - LocaleHelper#locale_url_param
     - IdvSession#timed_out_vendor_error
+    - JWT::Signature#sign
 'app/controllers':
   InstanceVariableAssumption:
     enabled: false

@@ -1,6 +1,8 @@
 ---
 es:
   forms:
+    account_recovery_setup:
+      legend: NOT TRANSLATED YET
     buttons:
       back: Atrás
       continue: Continuar
@@ -16,7 +18,6 @@ es:
     confirmation:
       show_hdr: Crear una contraseña segura
     messages:
-      current_address: Debería poder recibir correo en esta dirección.
       remember_device: Recuerde este navegador por %{duration} días
     passwords:
       edit:
@@ -73,6 +74,8 @@ es:
       code: Código de seguridad de sólo un uso
       personal_key: Clave personal
       try_again: Use otro número de teléfono.
+    two_factor_choice:
+      legend: Seleccione una opción para proteger su cuenta
     verify_profile:
       instructions: Ingrese el código de 10 caracteres que le enviamos en la carta.
       name: Código de confirmación

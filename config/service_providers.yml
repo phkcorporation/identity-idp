@@ -584,7 +584,7 @@ production:
       - 'https://portal.dot.gov/'
     restrict_to_deploy_env: 'prod'
 
-  # NGA GEOWorks Symphony 
+  # NGA GEOWorks Symphony
   'urn:gov:gsa:openidconnect.profiles:sp:sso:mitre:symphony':
     agency_id: 5
     friendly_name: 'GEOWorks/Symphony'
@@ -617,7 +617,7 @@ production:
   # Office Move.mil
   'urn:gov:gsa:openidconnect.profiles:sp:sso:dod:officemovemilprod':
     agency_id: 8
-    friendly_name: 'Office Move.mil'
+    friendly_name: 'office.move.mil'
     agency: 'DOD'
     logo: 'move_mil.svg'
     cert: 'move_mil_prod'
@@ -625,12 +625,17 @@ production:
     redirect_uris:
       - 'https://office.move.mil'
       - 'https://office.move.mil/auth/login-gov/callback'
+      - 'https://office.dp3.us'
+      - 'https://office.dp3.us/auth/login-gov/callback'
     restrict_to_deploy_env: 'prod'
-
+    attribute_bundle:
+      - x509_subject
+      - x509_presented
+  
   # My Move.mil
   'urn:gov:gsa:openidconnect.profiles:sp:sso:dod:mymovemilprod':
     agency_id: 8
-    friendly_name: 'My Move.mil'
+    friendly_name: 'my.move.mil'
     agency: 'DOD'
     logo: 'move_mil.svg'
     cert: 'move_mil_prod'
@@ -638,7 +643,12 @@ production:
     redirect_uris:
       - 'https://my.move.mil'
       - 'https://my.move.mil/auth/login-gov/callback'
+      - 'https://my.dp3.us'
+      - 'https://my.dp3.us/auth/login-gov/callback'
     restrict_to_deploy_env: 'prod'
+    attribute_bundle:
+      - x509_subject
+      - x509_presented
 
   # DOT – National Registry of Certified Medical Examiners App
   'urn:gov:dot:openidconnect.profiles:sp:sso:dot:nr_auth':
@@ -655,4 +665,44 @@ production:
       - 'https://nr-1.fmcsa.dot.gov:443/'
       - 'https://nr-1.fmcsa.dot.gov:443/nr-authentication/'
       - 'https://nr-1.fmcsa.dot.gov:443/nr-authentication/LoginHandler'
+    restrict_to_deploy_env: 'prod'
+
+  # SAM – System for Award Management
+  'urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:sam':
+    agency_id: 9
+    friendly_name: 'SAM'
+    agency: 'GSA'
+    logo: 'sam.png'
+    cert: 'sam_prod'
+    return_to_sp_url: 'https://sam.gov/portal/SAM'
+    redirect_uris:
+      - 'https://sam.gov/portal/SAM'
+      - 'https://www.sam.gov/portal/SAM'
+    restrict_to_deploy_env: 'prod'
+
+  # SAM – System for Award Management / testing prod from UAT
+  'urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:sam_uat':
+    agency_id: 9
+    friendly_name: 'SAM - UAT'
+    agency: 'GSA'
+    logo: 'sam.png'
+    cert: 'sam_prod'
+    return_to_sp_url: 'https://uat.sam.gov/portal/SAM'
+    redirect_uris:
+      - 'https://uat.sam.gov/portal/SAM'
+    restrict_to_deploy_env: 'prod'
+
+  # DOE - Fossil Energy - Import/Export Authorization Portal for Natural Gas
+  'urn:gov:gsa:openidconnect.profiles:sp:sso:doe:fergas':
+    agency_id: 10
+    friendly_name: 'Import/Export Authorization Portal for Natural Gas'
+    agency: 'DOE'
+    logo: 'doe.png'
+    cert: 'doe_prod'
+    return_to_sp_url: 'https://fossil.energy.gov/fergas-fe/#/login'
+    redirect_uris:
+      - 'https://fossil.energy.gov/fergas-fe/#/certify_redirect'
+      - 'https://fossil.energy.gov/fergas-fe/#/login'
+      - 'https://fossil.energy.gov/fergas-fe/#/login_redirect'
+      - 'https://fossil.energy.gov/fergas-fe/#/notice/15'
     restrict_to_deploy_env: 'prod'

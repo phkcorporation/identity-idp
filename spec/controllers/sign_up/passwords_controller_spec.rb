@@ -47,13 +47,24 @@ describe SignUp::PasswordsController do
 
       post :create, params: { password_form: { password: 'NewVal' }, confirmation_token: token }
     end
+
+    it 'saves password metrics' do
+      token = 'new token'
+      params = { password_form: { password: 'saltypickles' }, confirmation_token: token }
+      create(:user, confirmation_token: token, confirmation_sent_at: Time.zone.now)
+
+      post :create, params: params
+
+      expect(PasswordMetric.where(metric: 'length', value: 12, count: 1).count).to eq(1)
+      expect(PasswordMetric.where(metric: 'guesses_log10', value: 7.1, count: 1).count).to eq(1)
+    end
   end
 
   describe '#new' do
     render_views
     it 'instructs crawlers to not index this page' do
       token = 'foo token'
-      user = create(:user, :unconfirmed, confirmation_token: token, confirmation_sent_at: Time.zone.now)
+      create(:user, :unconfirmed, confirmation_token: token, confirmation_sent_at: Time.zone.now)
       get :new, params: { confirmation_token: token }
 
       expect(response.body).to match('<meta content="noindex,nofollow" name="robots" />')

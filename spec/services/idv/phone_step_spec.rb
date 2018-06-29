@@ -9,7 +9,7 @@ describe Idv::PhoneStep do
     idvs.applicant = { first_name: 'Some' }
     idvs
   end
-  let(:idv_form_params) { { phone: '555-555-0000', phone_confirmed_at: nil } }
+  let(:idv_form_params) { { phone: '703-555-0000', phone_confirmed_at: nil } }
   let(:idv_phone_form) { Idv::PhoneForm.new(idv_session.params, user) }
 
   def build_step(vendor_validator_result)
@@ -21,11 +21,14 @@ describe Idv::PhoneStep do
   end
 
   describe '#submit' do
+    let(:context) { 'some context' }
+
     it 'returns true for mock-happy phone' do
       step = build_step(
         Idv::VendorResult.new(
           success: true,
-          errors: {}
+          errors: {},
+          context: context
         )
       )
 
@@ -36,10 +39,17 @@ describe Idv::PhoneStep do
       expect(result.errors).to be_empty
       expect(idv_session.vendor_phone_confirmation).to eq true
       expect(idv_session.params).to eq idv_phone_form.idv_params
+      expect(result.extra).to include(
+        vendor: {
+          messages: [],
+          context: context,
+          exception: nil,
+        }
+      )
     end
 
     it 'returns false for mock-sad phone' do
-      idv_form_params[:phone] = '555-555-5555'
+      idv_form_params[:phone] = '703-555-5555'
       errors = { phone: ['The phone number could not be verified.'] }
 
       step = build_step(

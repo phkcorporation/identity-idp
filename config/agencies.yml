@@ -15,6 +15,10 @@ test:
     name: 'DHS'
   8:
     name: 'DOD'
+  9:
+    name: 'GSA'
+  10:
+    name: 'DOE'
 
 development:
   1:
@@ -33,6 +37,10 @@ development:
     name: 'USSS'
   8:
     name: 'DOD'
+  9:
+    name: 'GSA'
+  10:
+    name: 'DOE'
 
 production:
   1:
@@ -51,3 +59,7 @@ production:
     name: 'USSS'
   8:
     name: 'DOD'
+  9:
+    name: 'GSA'
+  10:
+    name: 'DOE'

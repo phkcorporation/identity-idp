@@ -35,19 +35,19 @@ feature 'Accessibility on IDV pages', :js, idv_job: true do
       sign_in_and_2fa_user
       visit idv_session_path
       fill_out_idv_form_ok
-      click_button t('forms.buttons.continue')
-      click_idv_address_choose_phone
+      click_idv_continue
+      click_idv_continue
 
       expect(current_path).to eq idv_phone_path
       expect(page).to be_accessible
     end
 
     scenario 'review page' do
-      user = sign_in_and_2fa_user
+      sign_in_and_2fa_user
       visit idv_session_path
       fill_out_idv_form_ok
-      click_button t('forms.buttons.continue')
-      click_idv_address_choose_phone
+      click_idv_continue
+      click_idv_continue
       click_button t('forms.buttons.continue')
 
       expect(current_path).to eq idv_review_path
@@ -55,11 +55,11 @@ feature 'Accessibility on IDV pages', :js, idv_job: true do
     end
 
     scenario 'personal key / confirmation page' do
-      user = sign_in_and_2fa_user
+      sign_in_and_2fa_user
       visit idv_session_path
       fill_out_idv_form_ok
       click_idv_continue
-      click_idv_address_choose_phone
+      click_idv_continue
       click_idv_continue
       fill_in :user_password, with: Features::SessionHelper::VALID_PASSWORD
       click_continue

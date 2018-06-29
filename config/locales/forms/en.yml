@@ -1,6 +1,8 @@
 ---
 en:
   forms:
+    account_recovery_setup:
+      legend: Select a secondary authentication option
     buttons:
       back: Back
       continue: Continue
@@ -16,7 +18,6 @@ en:
     confirmation:
       show_hdr: Create a strong password
     messages:
-      current_address: You should be be able to receive mail at this address.
       remember_device: Remember this browser for %{duration} days
     passwords:
       edit:
@@ -73,6 +74,8 @@ en:
       code: One-time security code
       personal_key: Personal key
       try_again: Use another phone number
+    two_factor_choice:
+      legend: Select an option to secure your account
     verify_profile:
       instructions: Enter the ten-character code in the letter we sent you.
       name: Confirmation code

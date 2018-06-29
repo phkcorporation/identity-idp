@@ -113,7 +113,7 @@ describe ApplicationController do
 
         get :index
 
-        expect(response).to redirect_to phone_setup_url
+        expect(response).to redirect_to two_factor_options_url
       end
     end
 
@@ -242,6 +242,16 @@ describe ApplicationController do
 
         expect(flash[:notice]).to be_nil
       end
+    end
+
+    it 'returns a 400 bad request when a url generation error is raised on the redirect' do
+      allow_any_instance_of(ApplicationController).to \
+        receive(:redirect_to).and_raise(ActionController::UrlGenerationError)
+      allow(subject).to receive(:current_user).and_return(user)
+
+      get :index, params: { timeout: true, request_id: '123' }
+
+      expect(response).to be_bad_request
     end
 
     context 'when there is no current user' do

@@ -1,6 +1,8 @@
 ---
 fr:
   forms:
+    account_recovery_setup:
+      legend: NOT TRANSLATED YET
     buttons:
       back: Retour
       continue: Continuer
@@ -16,8 +18,6 @@ fr:
     confirmation:
       show_hdr: Créez un mot de passe fort
     messages:
-      current_address: Vous devriez être en mesure de recevoir du courrier à cette
-        adresse.
       remember_device: Enregistrer ce navigateur pendant %{duration} jours
     passwords:
       edit:
@@ -77,6 +77,8 @@ fr:
       code: Code de sécurité
       personal_key: Clé personnelle
       try_again: Utilisez un autre numéro de téléphone
+    two_factor_choice:
+      legend: Sélectionnez une option pour sécuriser votre compte
     verify_profile:
       instructions: Entrez le code à dix caractères qui se trouve dans la lettre que
         nous vous avons envoyée.

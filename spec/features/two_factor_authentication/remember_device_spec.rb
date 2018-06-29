@@ -28,7 +28,8 @@ feature 'Remembering a 2FA device' do
     def remember_device_and_sign_out_user
       user = sign_up_and_set_password
       user.password = Features::SessionHelper::VALID_PASSWORD
-      fill_in :user_phone_form_phone, with: '5551231234'
+      select_2fa_option('sms')
+      fill_in :user_phone_form_phone, with: '2025551212'
       click_send_security_code
       check :remember_device
       click_submit_default
@@ -45,7 +46,7 @@ feature 'Remembering a 2FA device' do
       user = user_with_2fa
       sign_in_and_2fa_user(user)
       visit manage_phone_path
-      fill_in 'user_phone_form_phone', with: '5552347193'
+      fill_in 'user_phone_form_phone', with: '2022347193'
       click_button t('forms.buttons.submit.confirm_change')
       check :remember_device
       click_submit_default
@@ -62,7 +63,7 @@ feature 'Remembering a 2FA device' do
       click_submit_default
 
       visit manage_phone_path
-      fill_in 'user_phone_form_phone', with: '5552347193'
+      fill_in 'user_phone_form_phone', with: '2022347193'
       click_button t('forms.buttons.submit.confirm_change')
 
       expect(current_path).to eq(login_two_factor_path(otp_delivery_preference: :sms))
@@ -79,8 +80,8 @@ feature 'Remembering a 2FA device' do
       visit idv_session_path
       fill_out_idv_form_ok
       click_idv_continue
-      click_idv_address_choose_phone
-      fill_out_phone_form_ok('5551603829')
+      click_idv_continue
+      fill_out_phone_form_ok('2022603829')
       click_idv_continue
       choose_idv_otp_delivery_method_sms
     end

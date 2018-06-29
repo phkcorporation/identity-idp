@@ -32,6 +32,8 @@ Rails.application.routes.draw do
         as: :voice_otp,
         defaults: { format: :xml }
 
+  post '/api/usps_upload' => 'usps_upload#create'
+
   get '/openid_connect/authorize' => 'openid_connect/authorization#index'
   get '/openid_connect/logout' => 'openid_connect/logout#index'
 
@@ -99,10 +101,12 @@ Rails.application.routes.draw do
          as: :create_verify_personal_key
     get '/account/verify_phone' => 'users/verify_profile_phone#index', as: :verify_profile_phone
     post '/account/verify_phone' => 'users/verify_profile_phone#create'
+    get '/account_recovery_setup' => 'account_recovery_setup#index'
 
     if FeatureManagement.piv_cac_enabled?
       get '/piv_cac' => 'users/piv_cac_authentication_setup#new', as: :setup_piv_cac
       delete '/piv_cac' => 'users/piv_cac_authentication_setup#delete', as: :disable_piv_cac
+      get '/present_piv_cac' => 'users/piv_cac_authentication_setup#redirect_to_piv_cac_service', as: :redirect_to_piv_cac_service
     end
 
     delete '/authenticator_setup' => 'users/totp_setup#disable', as: :disable_totp
@@ -123,8 +127,10 @@ Rails.application.routes.draw do
     post '/manage/personal_key' => 'users/personal_keys#update'
 
     get '/otp/send' => 'users/two_factor_authentication#send_code'
-    get '/phone_setup' => 'users/two_factor_authentication_setup#index'
-    patch '/phone_setup' => 'users/two_factor_authentication_setup#set'
+    get '/two_factor_options' => 'users/two_factor_authentication_setup#index'
+    patch '/two_factor_options' => 'users/two_factor_authentication_setup#create'
+    get '/phone_setup' => 'users/phone_setup#index'
+    patch '/phone_setup' => 'users/phone_setup#create'
     get '/users/two_factor_authentication' => 'users/two_factor_authentication#show',
         as: :user_two_factor_authentication # route name is used by two_factor_authentication gem
 
@@ -160,8 +166,6 @@ Rails.application.routes.draw do
         get '/fail' => 'idv#fail'
       end
       scope '/verify', module: 'idv', as: 'idv' do
-        get '/address' => 'address#index'
-        post '/address' => 'address#create'
         get '/come_back_later' => 'come_back_later#show'
         get '/confirmations' => 'confirmations#show'
         post '/confirmations' => 'confirmations#update'
@@ -175,6 +179,7 @@ Rails.application.routes.draw do
         get '/session' => 'sessions#new'
         put '/session' => 'sessions#create'
         get '/session/result' => 'sessions#show'
+        get '/session/success' => 'sessions#success'
         delete '/session' => 'sessions#destroy'
         get '/session/dupe' => 'sessions#dupe'
         get '/jurisdiction' => 'jurisdiction#new'

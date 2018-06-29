@@ -9,7 +9,8 @@ shared_examples 'remember device' do
   it 'requires 2FA on sign in after expiration' do
     user = remember_device_and_sign_out_user
 
-    Timecop.travel (Figaro.env.remember_device_expiration_days.to_i + 1).days.from_now do
+    days_to_travel = (Figaro.env.remember_device_expiration_days.to_i + 1).days.from_now
+    Timecop.travel days_to_travel do
       sign_in_user(user)
 
       expect(current_path).to eq(login_two_factor_path(otp_delivery_preference: :sms))
@@ -24,7 +25,7 @@ shared_examples 'remember device' do
 
     sign_in_user(user)
     visit manage_phone_path
-    fill_in 'user_phone_form_phone', with: '5551230000'
+    fill_in 'user_phone_form_phone', with: '7032231000'
     click_button t('forms.buttons.submit.confirm_change')
     click_submit_default
     first(:link, t('links.sign_out')).click
