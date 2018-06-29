@@ -43,7 +43,6 @@ module TwoFactorAuthentication
     end
 
     def configuration_manager(method)
-      puts "Getting method manager for #{method}"
       class_constant(method, 'ConfigurationManager')&.new(user)
     end
 
@@ -59,7 +58,6 @@ module TwoFactorAuthentication
     end
 
     def class_constant(method, suffix)
-      puts "Looking for class TwoFactorAuthentication::#{method.to_s.camelcase}#{suffix}"
       ('TwoFactorAuthentication::' + method.to_s.camelcase + suffix).safe_constantize
     end
 

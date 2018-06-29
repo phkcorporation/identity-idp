@@ -20,10 +20,12 @@ module TwoFactorAuthentication
     ### Method-specific data management
     ###
 
+    delegate :active_profile, to: :user
+
     def create_new_code(session)
-      if user.active_profile.present?
+      if active_profile.present?
         Pii::ReEncryptor.new(user: user, user_session: session).perform
-        user.active_profile.personal_key
+        active_profile.personal_key
       else
         PersonalKeyGenerator.new(user).create
       end

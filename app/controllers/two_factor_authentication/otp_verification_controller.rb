@@ -36,7 +36,7 @@ module TwoFactorAuthentication
     end
 
     def phone_enabled?
-      configuration_manager.enabled?
+      method_manager.two_factor_enabled?(%i[sms voice])
     end
 
     def two_factor_enabled?
